@@ -143,8 +143,8 @@ class CifarModel():
 
             loss += l2_regularizer_weight * weight_norm
             penalty_weight = (penalty_weight 
-            if i >= penalty_anneal_iters else 1.0):
-                loss += penalty_weight * train_penalty
+            if i >= penalty_anneal_iters else 1.0)
+            loss += penalty_weight * train_penalty
             if penalty_weight > 1.0:
             # Rescale the entire loss to keep gradients in a reasonable range
             
