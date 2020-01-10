@@ -18,7 +18,7 @@
 # penalty_anneal_iters = np.random.randint(50, 250)
 # penalty_weight = 10**np.random.uniform(2, 6)
 echo "IRM (ours):"
-python -u main.py \
+python3 -u main.py \
   --hidden_dim=390 \
   --l2_regularizer_weight=0.00110794568 \
   --lr=0.0004898536566546834 \
@@ -32,7 +32,7 @@ python -u main.py \
 # random guessing. Instead we arbitrarily pick what we consider to be
 # ``reasonable'' hyperparams.
 echo "ERM:"
-python -u main.py \
+python3 -u main.py \
   --hidden_dim=256 \
   --l2_regularizer_weight=0.001 \
   --lr=0.001 \
@@ -50,7 +50,7 @@ python -u main.py \
 # l2_regularizer_weight = 10**np.random.uniform(-2, -5)
 # lr = 10**np.random.uniform(-2.5, -3.5)
 echo "ERM, grayscale model (oracle):"
-python -u main.py \
+python3 -u main.py \
   --grayscale_model \
   --hidden_dim=83 \
   --l2_regularizer_weight=0.0008602868865288383 \
