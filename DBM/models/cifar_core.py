@@ -9,6 +9,7 @@ from tensorboardX import SummaryWriter
 from models import basenet
 from models import dataloader
 import utils
+From torch import autograd
 
 class CifarModel():
     def __init__(self, opt):
@@ -138,7 +139,7 @@ class CifarModel():
             ## IRM addition
             train_penalty = self.penalty(outputs, targets)
             weight_norm = torch.tensor(0.).cuda()
-            for w in self.parameters():
+            for w in self.network.parameters():
                 weight_norm += w.norm().pow(2)
 
             loss += l2_regularizer_weight * weight_norm
@@ -148,9 +149,9 @@ class CifarModel():
             if penalty_weight > 1.0:
             # Rescale the entire loss to keep gradients in a reasonable range
             
-            /= penalty_weight
+                /= penalty_weight
 
-            optimizer.zero_grad()
+                optimizer.zero_grad()
             ######################################
 
             loss.backward()
