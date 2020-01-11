@@ -146,7 +146,7 @@ class CifarModel():
             penalty_weight = (penalty_weight 
                 if i >= penalty_anneal_iters else 1.0)
             loss += penalty_weight * train_penalty
-            print("loss: {}, penalty_weight: {}, train_penalty: {}",loss, penalty_weight,train_penalty)
+            print("loss: {}, penalty_weight: {}, train_penalty: {}".format(loss, penalty_weight,train_penalty))
             if penalty_weight > 1.0:
                 # Rescale the entire loss to keep gradients in a reasonable range
                 loss /= penalty_weight
