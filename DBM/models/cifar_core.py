@@ -152,13 +152,13 @@ class CifarModel():
             if penalty_weight > 1.0:
                 # Rescale the entire loss to keep gradients in a reasonable range
                 loss /= penalty_weight
-
+            
             self.optimizer.zero_grad()
             ######################################
 
             loss.backward()
             self.optimizer.step()
-
+            print("optimizer: {}".format(self.optimizer))
             _, predicted = outputs.max(1)
             total += targets.size(0)
             correct += predicted.eq(targets).sum().item()
