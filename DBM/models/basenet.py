@@ -89,7 +89,7 @@ class ResNet(nn.Module):
     def forward(self, x):
         print("calling forward on x: {}".format(x))
         out = F.relu(self.bn1(self.conv1(x)))
-        print("relu out: {}".format(out))
+        print("relu out: has shape {}, {}".format(out.shape,out))
         out = self.layer1(out)
         print("layer1 out: {}".format(out))
         out = self.layer2(out)
