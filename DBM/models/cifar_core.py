@@ -139,6 +139,7 @@ class CifarModel():
             ## IRM addition
             train_penalty = self.penalty(outputs, targets)
             weight_norm = torch.tensor(0.).cuda()
+            print(weight_norm)
             for w in self.network.parameters():
                 weight_norm += w.norm().pow(2)
 
