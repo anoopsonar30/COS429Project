@@ -136,6 +136,7 @@ class CifarModel():
             self.optimizer.zero_grad()
             # print("images: {}".format(images))
             outputs, _ = self.forward(images)
+            print("outputs: {}".format(outputs))
             loss = self._criterion(outputs, targets)
 
             ## IRM addition
@@ -158,7 +159,6 @@ class CifarModel():
 
             loss.backward()
             self.optimizer.step()
-            print("optimizer: {}".format(self.optimizer))
             _, predicted = outputs.max(1)
             total += targets.size(0)
             correct += predicted.eq(targets).sum().item()
