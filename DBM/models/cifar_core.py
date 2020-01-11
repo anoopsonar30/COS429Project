@@ -139,7 +139,6 @@ class CifarModel():
             ## IRM addition
             train_penalty = self.penalty(outputs, targets)
             weight_norm = torch.tensor(0.).cuda()
-            print(weight_norm)
             for w in self.network.parameters():
                 weight_norm += w.norm().pow(2)
 
@@ -147,6 +146,7 @@ class CifarModel():
             penalty_weight = (penalty_weight 
                 if i >= penalty_anneal_iters else 1.0)
             loss += penalty_weight * train_penalty
+            print("loss: {}, penalty_weight: {}",loss)
             if penalty_weight > 1.0:
                 # Rescale the entire loss to keep gradients in a reasonable range
                 loss /= penalty_weight
