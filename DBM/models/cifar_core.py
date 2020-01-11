@@ -31,6 +31,7 @@ class CifarModel():
         self.network = basenet.ResNet18(num_classes=opt['output_dim']).to(self.device)
 
     def forward(self, x):
+        print("network: {}".format(self.network))
         out, feature = self.network(x)
         return out, feature
 
@@ -133,7 +134,7 @@ class CifarModel():
         for i, (images, targets) in enumerate(loader):
             images, targets = images.to(self.device), targets.to(self.device)
             self.optimizer.zero_grad()
-            print("images: {}".format(images))
+            # print("images: {}".format(images))
             outputs, _ = self.forward(images)
             loss = self._criterion(outputs, targets)
 
