@@ -133,6 +133,7 @@ class CifarModel():
         for i, (images, targets) in enumerate(loader):
             images, targets = images.to(self.device), targets.to(self.device)
             self.optimizer.zero_grad()
+            print("images: {}".format(images))
             outputs, _ = self.forward(images)
             loss = self._criterion(outputs, targets)
 
