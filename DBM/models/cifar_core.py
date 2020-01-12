@@ -95,7 +95,7 @@ class CifarModel():
                             )
         
     def _criterion(self, output, target):
-        return F.cross_entropy(output, target)
+        return F.binary_cross_entropy_with_logits(output, target)
         
     def state_dict(self):
         state_dict = {
