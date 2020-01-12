@@ -219,7 +219,7 @@ class CifarModel():
     def penalty(self, loss):
         scale = torch.nn.Parameter(torch.Tensor([1.0])).to(self.device)
         # loss = self._criterion(logits * scale, y)
-        grad = autograd.grad(loss, [scale], create_graph=True)[0]
+        grad = autograd.grad(loss, scale, create_graph=True)[0]
         # print("logits: {}, y: {}, scale: {}, loss: {}, grad: {}".format(logits, y, scale, loss,grad))
         return torch.sum(grad**2)
 
