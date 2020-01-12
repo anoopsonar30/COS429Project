@@ -217,7 +217,7 @@ class CifarModel():
     #     self.epoch += 1
 
     def penalty(self, loss):
-        scale = torch.nn.Parameter(torch.Tensor([1.0])).to(self.device)
+        scale = torch.tensor(1.).cuda().requires_grad_()
         # loss = self._criterion(logits * scale, y)
         grad = autograd.grad(loss, scale, create_graph=True)[0]
         # print("logits: {}, y: {}, scale: {}, loss: {}, grad: {}".format(logits, y, scale, loss,grad))
