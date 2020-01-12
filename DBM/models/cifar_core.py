@@ -31,7 +31,6 @@ class CifarModel():
         self.network = basenet.ResNet18(num_classes=opt['output_dim']).to(self.device)
 
     def forward(self, x):
-        # print("network: {}".format(self.network))
         out, feature = self.network(x)
         return out, feature
 
@@ -120,26 +119,47 @@ class CifarModel():
 
     def _train(self, loader):
         """Train the model for one epoch"""
-        penalty_multiplier = self.epoch ** 1.6
+        
         self.network.train()
         self.adjust_lr()
+        
+        train_loss = 0
         total = 0
         correct = 0
+        l2_regularizer_weight=0.00110794568
+        penalty_anneal_iters=190
+        penalty_weight=91257.18613115903
+
         for i, (images, targets) in enumerate(loader):
             images, targets = images.to(self.device), targets.to(self.device)
             self.optimizer.zero_grad()
             outputs, _ = self.forward(images)
             loss = self._criterion(outputs, targets)
-            penalty = self.penalty(outputs,targets)
-            loss += penalty * penalty_multiplier
-            print("loss: {}, penalty: {}, penalty_multiplier: {}",loss,penalty,penalty_multiplier)
+
+            ## IRM addition
+            train_penalty = self.penalty(outputs, targets)
+            weight_norm = torch.tensor(0.).cuda()
+            for w in self.network.parameters():
+                weight_norm += w.norm().pow(2)
+
+            loss += l2_regularizer_weight * weight_norm
+            penalty_weight = (penalty_weight 
+                if i >= penalty_anneal_iters else 1.0)
+            loss += penalty_weight * train_penalty
+            if penalty_weight > 1.0:
+                # Rescale the entire loss to keep gradients in a reasonable range
+                loss /= penalty_weight
+
+            self.optimizer.zero_grad()
+            ######################################
+
             loss.backward()
             self.optimizer.step()
 
             _, predicted = outputs.max(1)
             total += targets.size(0)
             correct += predicted.eq(targets).sum().item()
-            accuracy = correct*100. / total
+            accuracy = correct * 100. / total
 
             train_result = {
                 'accuracy': correct*100. / total,
@@ -156,70 +176,10 @@ class CifarModel():
         self._train_accuracy = accuracy
         self.epoch += 1
 
-    # def _train(self, loader):
-    #     """Train the model for one epoch"""
-        
-    #     self.network.train()
-    #     self.adjust_lr()
-        
-    #     train_loss = 0
-    #     total = 0
-    #     correct = 0
-    #     l2_regularizer_weight=0.00110794568
-    #     penalty_anneal_iters=20
-    #     p_weight=91257.18613115903
-
-    #     for i, (images, targets) in enumerate(loader):
-    #         images, targets = images.to(self.device), targets.to(self.device)
-    #         self.optimizer.zero_grad()
-    #         # print("images: {}".format(images))
-    #         outputs, _ = self.forward(images)
-    #         # print("outputs: {}".format(outputs))
-    #         loss = self._criterion(outputs, targets)
-
-    #         ## IRM addition
-    #         train_penalty = self.penalty(outputs, targets)
-    #         weight_norm = torch.tensor(0.).cuda()
-    #         for w in self.network.parameters():
-    #             weight_norm += w.norm().pow(2)
-
-    #         loss += l2_regularizer_weight * weight_norm
-    #         penalty_weight = (p_weight 
-    #             if i >= penalty_anneal_iters else 1.0)
-    #         loss += penalty_weight * train_penalty
-    #         if penalty_weight > 1.0:
-    #             # Rescale the entire loss to keep gradients in a reasonable range
-    #             loss = loss / penalty_weight
-    #         print("i: {} penalty_anneal_iters {} loss: {}, penalty_weight: {}, train_penalty: {}".format(i,penalty_anneal_iters,loss, penalty_weight,train_penalty))            
-    #         self.optimizer.zero_grad()
-    #         ######################################
-
-    #         loss.backward()
-    #         self.optimizer.step()
-    #         _, predicted = outputs.max(1)
-    #         total += targets.size(0)
-    #         correct += predicted.eq(targets).sum().item()
-    #         accuracy = correct * 100. / total
-
-    #         train_result = {
-    #             'accuracy': correct*100. / total,
-    #             'loss': loss.item(),
-    #         }
-    #         self.log_result('Train iteration', train_result,
-    #                         len(loader)*self.epoch + i)
-
-    #         if self.print_freq and (i % self.print_freq == 0):
-    #             print('Training epoch {}: [{}|{}], loss:{}, accuracy:{}'.format(
-    #                 self.epoch, i+1, len(loader), loss.item(), accuracy
-    #             ))
-
-    #     self._train_accuracy = accuracy
-    #     self.epoch += 1
-
-    def penalty(self, logits,y):
+    def penalty(self, logits, y):
         scale = torch.tensor(1.).cuda().requires_grad_()
         loss = self._criterion(logits * scale, y)
-        grad = autograd.grad(loss, scale, create_graph=True)[0]
+        grad = autograd.grad(loss, [scale], create_graph=True)[0]
         return torch.sum(grad**2)
 
     def _test(self, loader):
