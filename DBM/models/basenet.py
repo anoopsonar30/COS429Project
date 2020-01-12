@@ -87,22 +87,22 @@ class ResNet(nn.Module):
         return nn.Sequential(*layers)
 
     def forward(self, x):
-        # print("calling forward on x: {}".format(x))
+        print("calling forward on x: {}".format(x))
         out = F.relu(self.bn1(self.conv1(x)))
-        # print("relu out: has shape {}, {}".format(out.shape,out))
+        print("relu out: has shape {}, {}".format(out.shape,out))
         out = self.layer1(out)
-        # print("layer1 out: {}".format(out))
+        print("layer1 out: {}".format(out))
         out = self.layer2(out)
-        # print("layer2 out: {}".format(out))
+        print("layer2 out: {}".format(out))
         out = self.layer3(out)
-        # print("layer3 out: {}".format(out))
+        print("layer3 out: {}".format(out))
         out = self.layer4(out)
-        # print("layer4 out: {}".format(out))
+        print("layer4 out: {}".format(out))
         out = F.avg_pool2d(out, 4)
-        # print("pool2d out: {}".format(out))
+        print("pool2d out: {}".format(out))
         feature = out.view(out.size(0), -1)
         out = self.linear(feature)
-        # print("linear out: {}".format(out))        
+        print("linear out: {}".format(out))        
         return out, feature
 
 class ResNet_base(nn.Module):
