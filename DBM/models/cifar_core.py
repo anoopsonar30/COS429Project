@@ -128,8 +128,8 @@ class CifarModel():
         total = 0
         correct = 0
         l2_regularizer_weight=0.00110794568
-        penalty_anneal_iters=9
-        penalty_weight=91257.18613115903
+        penalty_anneal_iters=20
+        p_weight=91257.18613115903
 
         for i, (images, targets) in enumerate(loader):
             images, targets = images.to(self.device), targets.to(self.device)
@@ -146,14 +146,13 @@ class CifarModel():
                 weight_norm += w.norm().pow(2)
 
             loss += l2_regularizer_weight * weight_norm
-            penalty_weight = (penalty_weight 
+            penalty_weight = (p_weight 
                 if i >= penalty_anneal_iters else 1.0)
             loss += penalty_weight * train_penalty
-            # print("i: {} penalty_anneal_iters {} loss: {}, penalty_weight: {}, train_penalty: {}".format(i,penalty_anneal_iters,loss, penalty_weight,train_penalty))
             if penalty_weight > 1.0:
                 # Rescale the entire loss to keep gradients in a reasonable range
                 loss = loss / penalty_weight
-            
+            print("i: {} penalty_anneal_iters {} loss: {}, penalty_weight: {}, train_penalty: {}".format(i,penalty_anneal_iters,loss, penalty_weight,train_penalty))            
             self.optimizer.zero_grad()
             ######################################
 
