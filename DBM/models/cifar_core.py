@@ -149,7 +149,7 @@ class CifarModel():
             penalty_weight = (penalty_weight 
                 if i >= penalty_anneal_iters else 1.0)
             loss += penalty_weight * train_penalty
-            print("i: {} penalty_anneal_iters {} loss: {}, penalty_weight: {}, train_penalty: {}".format(i,penalty_anneal_iters,loss, penalty_weight,train_penalty))
+            # print("i: {} penalty_anneal_iters {} loss: {}, penalty_weight: {}, train_penalty: {}".format(i,penalty_anneal_iters,loss, penalty_weight,train_penalty))
             if penalty_weight > 1.0:
                 # Rescale the entire loss to keep gradients in a reasonable range
                 loss = loss / penalty_weight
@@ -183,7 +183,7 @@ class CifarModel():
         scale = torch.tensor(1.).cuda().requires_grad_()
         loss = self._criterion(logits * scale, y)
         grad = autograd.grad(loss, [scale], create_graph=True)[0]
-        print("logits: {}, y: {}, scale: {}, loss: {}, grad: {}".format(logits, y, scale, loss,grad))
+        # print("logits: {}, y: {}, scale: {}, loss: {}, grad: {}".format(logits, y, scale, loss,grad))
         return torch.sum(grad**2)
 
     def _test(self, loader):
