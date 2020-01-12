@@ -130,7 +130,7 @@ class CifarModel():
             self.optimizer.zero_grad()
             outputs, _ = self.forward(images)
             loss = self._criterion(outputs, targets)
-            penalty = self.penalty(loss)
+            penalty = self.penalty(outputs,targets)
             loss += penalty * penalty_multiplier
             print("loss: {}, penalty: {}, penalty_multiplier: {}",loss,penalty,penalty_multiplier)
             loss.backward()
@@ -216,11 +216,10 @@ class CifarModel():
     #     self._train_accuracy = accuracy
     #     self.epoch += 1
 
-    def penalty(self, loss):
+    def penalty(self, logits,y):
         scale = torch.tensor(1.).cuda().requires_grad_()
-        # loss = self._criterion(logits * scale, y)
+        loss = self._criterion(logits * scale, y)
         grad = autograd.grad(loss, scale, create_graph=True)[0]
-        # print("logits: {}, y: {}, scale: {}, loss: {}, grad: {}".format(logits, y, scale, loss,grad))
         return torch.sum(grad**2)
 
     def _test(self, loader):
