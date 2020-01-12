@@ -4,7 +4,6 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch import autograd
 import torchvision.transforms as transforms
 from tensorboardX import SummaryWriter
 from models import basenet
@@ -126,40 +125,19 @@ class CifarModel():
         train_loss = 0
         total = 0
         correct = 0
-        l2_regularizer_weight=0.00110794568
-        penalty_anneal_iters=190
-        penalty_weight=91257.18613115903
-
         for i, (images, targets) in enumerate(loader):
             images, targets = images.to(self.device), targets.to(self.device)
             self.optimizer.zero_grad()
             outputs, _ = self.forward(images)
             loss = self._criterion(outputs, targets)
-
-            ## IRM addition
-            train_penalty = self.penalty(outputs, targets)
-            weight_norm = torch.tensor(0.).cuda()
-            for w in self.network.parameters():
-                weight_norm += w.norm().pow(2)
-
-            loss += l2_regularizer_weight * weight_norm
-            penalty_weight = (penalty_weight 
-                if i >= penalty_anneal_iters else 1.0)
-            loss += penalty_weight * train_penalty
-            if penalty_weight > 1.0:
-                # Rescale the entire loss to keep gradients in a reasonable range
-                loss /= penalty_weight
-
-            self.optimizer.zero_grad()
-            ######################################
-
             loss.backward()
             self.optimizer.step()
 
+            train_loss += loss.item()
             _, predicted = outputs.max(1)
             total += targets.size(0)
             correct += predicted.eq(targets).sum().item()
-            accuracy = correct * 100. / total
+            accuracy = correct*100. / total
 
             train_result = {
                 'accuracy': correct*100. / total,
@@ -175,12 +153,6 @@ class CifarModel():
 
         self._train_accuracy = accuracy
         self.epoch += 1
-
-    def penalty(self, logits, y):
-        scale = torch.tensor(1.).cuda().requires_grad_()
-        loss = self._criterion(logits * scale, y)
-        grad = autograd.grad(loss, [scale], create_graph=True)[0]
-        return torch.sum(grad**2)
 
     def _test(self, loader):
         """Test the model performance"""
@@ -232,3 +204,8 @@ class CifarModel():
                 'Test on gray images accuracy: {}'.format(test_color_result['accuracy'],
                                                           test_gray_result['accuracy']))
         utils.write_info(os.path.join(self.save_path, 'test_result.txt'), info)
+        
+    
+
+
+            
