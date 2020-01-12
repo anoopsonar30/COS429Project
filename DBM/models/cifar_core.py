@@ -128,7 +128,7 @@ class CifarModel():
         total = 0
         correct = 0
         l2_regularizer_weight=0.00110794568
-        penalty_anneal_iters=190
+        penalty_anneal_iters=9
         penalty_weight=91257.18613115903
 
         for i, (images, targets) in enumerate(loader):
