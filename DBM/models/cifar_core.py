@@ -134,9 +134,9 @@ class CifarModel():
         for i, (images, targets) in enumerate(loader):
             images, targets = images.to(self.device), targets.to(self.device)
             self.optimizer.zero_grad()
-            print("images: {}".format(images))
+            # print("images: {}".format(images))
             outputs, _ = self.forward(images)
-            print("outputs: {}".format(outputs))
+            # print("outputs: {}".format(outputs))
             loss = self._criterion(outputs, targets)
 
             ## IRM addition
@@ -149,10 +149,10 @@ class CifarModel():
             penalty_weight = (penalty_weight 
                 if i >= penalty_anneal_iters else 1.0)
             loss += penalty_weight * train_penalty
-            print("loss: {}, penalty_weight: {}, train_penalty: {}".format(loss, penalty_weight,train_penalty))
+            print("i: {} penalty_anneal_iters {} loss: {}, penalty_weight: {}, train_penalty: {}".format(i,penalty_anneal_iters,loss, penalty_weight,train_penalty))
             if penalty_weight > 1.0:
                 # Rescale the entire loss to keep gradients in a reasonable range
-                loss /= penalty_weight
+                loss = loss / penalty_weight
             
             self.optimizer.zero_grad()
             ######################################
