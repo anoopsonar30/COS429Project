@@ -172,7 +172,7 @@ class CifarModel():
                             len(loader)*self.epoch + i)
 
             if self.print_freq and (i % self.print_freq == 0):
-                # print('Training epoch {}: [{}|{}], loss:{}, accuracy:{}'.format(
+                print('Training epoch {}: [{}|{}], loss:{}, accuracy:{}'.format(
                     self.epoch, i+1, len(loader), loss.item(), accuracy
                 ))
 
