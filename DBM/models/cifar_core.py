@@ -31,7 +31,7 @@ class CifarModel():
         self.network = basenet.ResNet18(num_classes=opt['output_dim']).to(self.device)
 
     def forward(self, x):
-        print("network: {}".format(self.network))
+        # print("network: {}".format(self.network))
         out, feature = self.network(x)
         return out, feature
 
