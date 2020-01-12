@@ -136,7 +136,7 @@ class CifarModel():
             self.optimizer.zero_grad()
             # print("images: {}".format(images))
             outputs, _ = self.forward(images)
-            print("outputs: {}".format(outputs))
+            # print("outputs: {}".format(outputs))
             loss = self._criterion(outputs, targets)
 
             ## IRM addition
@@ -149,7 +149,7 @@ class CifarModel():
             penalty_weight = (penalty_weight 
                 if i >= penalty_anneal_iters else 1.0)
             loss += penalty_weight * train_penalty
-            print("loss: {}, penalty_weight: {}, train_penalty: {}".format(loss, penalty_weight,train_penalty))
+            # print("loss: {}, penalty_weight: {}, train_penalty: {}".format(loss, penalty_weight,train_penalty))
             if penalty_weight > 1.0:
                 # Rescale the entire loss to keep gradients in a reasonable range
                 loss /= penalty_weight
@@ -172,7 +172,7 @@ class CifarModel():
                             len(loader)*self.epoch + i)
 
             if self.print_freq and (i % self.print_freq == 0):
-                print('Training epoch {}: [{}|{}], loss:{}, accuracy:{}'.format(
+                # print('Training epoch {}: [{}|{}], loss:{}, accuracy:{}'.format(
                     self.epoch, i+1, len(loader), loss.item(), accuracy
                 ))
 
@@ -183,7 +183,7 @@ class CifarModel():
         scale = torch.tensor(1.).cuda().requires_grad_()
         loss = self._criterion(logits * scale, y)
         grad = autograd.grad(loss, [scale], create_graph=True)[0]
-        print("logits: {}, y: {}, scale: {}, loss: {}, grad: {}".format(logits, y, scale, loss,grad))
+        # print("logits: {}, y: {}, scale: {}, loss: {}, grad: {}".format(logits, y, scale, loss,grad))
         return torch.sum(grad**2)
 
     def _test(self, loader):
