@@ -69,7 +69,7 @@ def create_exerpiment_setting(opt):
         opt['device'] = torch.device('cuda' if opt['cuda'] else 'cpu')
         opt['print_freq'] = 50
         opt['batch_size'] = 128
-        opt['total_epochs'] = 10
+        opt['total_epochs'] = 200
         opt['save_folder'] = os.path.join('record/'+opt['experiment'], 
                                           opt['experiment_name'])
         utils.creat_folder(opt['save_folder'])
@@ -222,7 +222,7 @@ def create_exerpiment_setting(opt):
         
     elif opt['experiment'] == 'cifar-s_gradproj_adv':
         opt['output_dim'] = 10
-        opt['total_epochs'] = 10
+        opt['total_epochs'] = 200
         opt['training_ratio'] = 3
         opt['alpha'] = 1.
         
