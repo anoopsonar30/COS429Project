@@ -2,7 +2,7 @@
 Code for the paper:
 Towards Fairness in Visual Recognition: Effective Strategies for Bias Mitigation - https://github.com/princetonvisualai/DomainBiasMitigation
 
-Invariant Risk Minization - https://github.com/facebookresearch/InvariantRiskMinimization
+Invariant Risk Minimization - https://github.com/facebookresearch/InvariantRiskMinimization
 
 
 ## Requirements
