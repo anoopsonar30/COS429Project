@@ -1,6 +1,7 @@
 # COS 429 Final Project - Anoopkumar Sonar and Sahan Paliskara
 Code for the paper:
 Towards Fairness in Visual Recognition: Effective Strategies for Bias Mitigation - https://github.com/princetonvisualai/DomainBiasMitigation
+
 Invariant Risk Minization - https://github.com/facebookresearch/InvariantRiskMinimization
 
 
@@ -11,7 +12,7 @@ Invariant Risk Minization - https://github.com/facebookresearch/InvariantRiskMin
 * tensorboardX
 
 ## Data Preparation
-First download and unzip the CIFAR-10 and CINIC-10 by running the script `download.sh`
+First download and unzip the CIFAR-10 and CINIC-10 by running the script `download.sh` in DBM
 Run the `preprocess_data.py` to generate data for all experiments.
 
 ## Run Experiments
